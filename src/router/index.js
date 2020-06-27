@@ -226,7 +226,7 @@ export const constantRoutes = [
     children: [
       {
         path: "userManagement",
-        component: () => import("@/views/system/userManagement.vue"),
+        component: () => import("@/views/system/userManagement/index.vue"),
         meta: { title: "用户管理", icon: "iconfont iconyonghuguanli" }
       },
       {
