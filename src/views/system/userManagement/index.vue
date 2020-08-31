@@ -25,9 +25,7 @@
         ref="treeBox"
       >
         <span class="custom-tree-node" slot-scope="{ node, data }">
-          <span
-            ><i class="icon" :class="getClass(node)"></i>{{ node.label }}</span
-          >
+          <span>{{ data.deptName }}</span>
         </span>
       </el-tree>
     </div>
@@ -79,10 +77,10 @@
               align="center"
               fit
             >
-            <template slot-scope="scope">
-              <p v-if="item.prop!='avatar'">{{scope.row[item.prop]}}</p>
-              <img :src="imgCut(scope.row[item.prop])" v-else class="round"/>
-            </template>
+              <template slot-scope="scope">
+                <p v-if="item.prop != 'avatar'">{{ scope.row[item.prop] }}</p>
+                <img :src="imgCut(scope.row[item.prop])" v-else class="round" />
+              </template>
             </el-table-column>
             <el-table-column
               fixed="left"
@@ -115,7 +113,13 @@
               </template>
             </el-table-column>
           </el-table>
-          <el-pagination layout="prev, pager, next,jumper" :total="total" background class="talign-r mt-20 mr-20" @current-change="pageChange">
+          <el-pagination
+            layout="prev, pager, next,jumper"
+            :total="total"
+            background
+            class="talign-r mt-20 mr-20"
+            @current-change="pageChange"
+          >
           </el-pagination>
         </div>
       </div>

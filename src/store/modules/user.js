@@ -5,7 +5,7 @@ import { resetRouter } from "@/router";
 const getDefaultState = () => {
   return {
     token: getToken(),
-    userInfo:{}
+    userInfo: {}
   };
 };
 
@@ -18,8 +18,8 @@ const mutations = {
   SET_TOKEN: (state, token) => {
     state.token = token;
   },
-  SET_USERINFO:(state,userInfo)=>{
-    state.userInfo=userInfo
+  SET_USERINFO: (state, userInfo) => {
+    state.userInfo = userInfo
   }
 };
 
@@ -33,18 +33,18 @@ const actions = {
         JSON.stringify({
           username: username.trim(),
           password: password,
-          captcha
+          captcha,
         })
       )
         .then(res => {
           const { data } = res;
-          if(res.code===200){
+          if (res.code === 200) {
             commit('SET_TOKEN', data.token)
-            commit("SET_USERINFO",res.data)
+            commit("SET_USERINFO", res.data)
             setToken(data.token)
             resolve(res);
           }
-          else{
+          else {
             resolve(res)
           }
         })
@@ -75,10 +75,10 @@ const actions = {
     //       reject(error);
     //     });
     // });
-    if(Object.keys(state.userInfo).length){
+    if (Object.keys(state.userInfo).length) {
       resolve(true)
     }
-    else{
+    else {
       reject(false)
     }
 

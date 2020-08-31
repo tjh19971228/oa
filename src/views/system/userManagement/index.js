@@ -1,6 +1,22 @@
-import { getUserTableData } from "@/api/system";
-import { getToken } from "@/utils/auth";
+import {
+  getUserTableData, getOrganzitionTree
+} from "@/api/system.ts";
+import { LABELLIST } from "./variable"
 import showTableData from "@/components/dialog/index";
+const INITPARAMS = () => ({
+  "cursor": 0,
+  "deptId": 1282333239024947200,
+  "email": "",
+  "idCard": "",
+  "limit": 0,
+  "mobile": "",
+  "qq": "",
+  "sex": "",
+  "username": "",
+  "wechat": ""
+
+})
+
 export default {
   components: {
     showTableData
@@ -8,78 +24,14 @@ export default {
   data() {
     return {
       searchApartmentValue: "",
-      apartmentList: [
-        {
-          id: "1",
-          label: "监事",
-          icon: "iconfont iconkx-jianshihui",
-          children: [
-            {
-              id: "1-1",
-              label: "总经理",
-              icon: "iconfont iconOffice"
-            },
-            {
-              id: "1-2",
-              label: "部门经理/总管",
-              icon: "iconfont iconzhuguan"
-            }
-          ]
-        },
-        {
-          id: "2",
-          label: "人事部",
-          icon: "iconfont iconrenshibu",
-          children: [
-            {
-              id: "2-1",
-              label: "行政",
-              icon: "iconfont iconxingzheng"
-            },
-            {
-              id: "2-2",
-              label: "人事",
-              icon: "iconfont iconrenshi"
-            }
-          ]
-        },
-        {
-          id: "3",
-          label: "财务部",
-          icon: "iconfont iconhuiji",
-          children: [
-            {
-              id: "3-1",
-              label: "会计",
-              icon: "iconfont iconhuiji"
-            }
-          ]
-        },
-        {
-          id: "4",
-          label: "销售部",
-          icon: "iconfont iconxiaoshou",
-          children: [
-            {
-              id: "4-1",
-              label: "电话销售",
-              icon: "iconfont icondianhuaxiaoshou"
-            },
-            {
-              id: "4-2",
-              label: "直销",
-              icon: "iconfont iconzhixiaoxiangmu"
-            }
-          ]
-        }
-      ],
+      apartmentList: [],
       defaultProps: {
         children: "children",
-        label: "label"
+        label: "deptName"
       },
       //   当前选中的部门标题
-      apartmentTitle: "总经理",
-      currentKey: "总经理",
+      apartmentTitle: "组织机构",
+      currentKey: "组织机构",
       // 搜索的类型
       searchType: "ID",
       // 搜索的表格ID/用户名
@@ -87,105 +39,35 @@ export default {
       // 表格数据
       tableData: [],
       // 表格表头列表
-      labelList: [
-        {
-          label: "id",
-          prop: "key"
-        },
-        {
-          label: "用户名",
-          prop: "username"
-        },
-        {
-          label: "密码",
-          prop: "password"
-        },
-        {
-          label: "身份证",
-          prop: "idcard"
-        },
-        {
-          label: "qq",
-          prop: "qq"
-        },
-        {
-          label: "微信",
-          prop: "weixin"
-        },
-        {
-          label: "部门id",
-          prop: "dept_id"
-        },
-        {
-          label: "性别",
-          prop: "sex"
-        },
-        {
-          label: "头像",
-          prop: "avatar"
-        },
-        {
-          label: "年龄",
-          prop: "age"
-        },
-        {
-          label: "手机号",
-          prop: "phone"
-        },
-        {
-          label: "地址",
-          prop: "address"
-        },
-        {
-          label: "创建者",
-          prop: "create_by"
-        },
-        {
-          label: "创建时间",
-          prop: "create_time"
-        },
-        {
-          label: "上次更新者",
-          prop: "last_update_by"
-        },
-        {
-          label: "上次更新时间",
-          prop: "last_update_time"
-        },
-        {
-          label: "是否已删除",
-          prop: "del_flag"
-        }
-      ],
-      selectOptions: [
-        {
-          label: "ID",
-          value: "id"
-        },
-        {
-          label: "用户名",
-          value: "username"
-        },
-        {
-          label: "身份证",
-          value: "idcards"
-        },
-        {
-          label: "qq",
-          value: "qq"
-        },
-        {
-          label: "微信",
-          value: "weixin"
-        },
-        {
-          label: "部门ID",
-          value: "apartmentId"
-        },
-        {
-          label: "手机号",
-          value: "phone"
-        }
+      labelList: LABELLIST,
+      selectOptions: [{
+        label: "ID",
+        value: "id"
+      },
+      {
+        label: "用户名",
+        value: "username"
+      },
+      {
+        label: "身份证",
+        value: "idcards"
+      },
+      {
+        label: "qq",
+        value: "qq"
+      },
+      {
+        label: "微信",
+        value: "weixin"
+      },
+      {
+        label: "部门ID",
+        value: "apartmentId"
+      },
+      {
+        label: "手机号",
+        value: "phone"
+      }
       ],
       // 数据加载中
       loading: false,
@@ -194,45 +76,31 @@ export default {
       // 表格弹窗标题
       tableDataTitle: "",
       // 传输的表格数据
-      form: {},
+      form: INITPARAMS(),
       // 是否可以编辑表格数据
       isEdit: false,
       // 当前表格处于第几页
       page: 1,
       //   总共的数据数
       total: 0,
-    //   
+      //
     };
   },
   methods: {
     handleNodeClick(data) {
-      let label = data.label;
-      switch (label) {
-        case "监事":
-          this.apartmentTitle = "总经理";
-          break;
-        case "人事部":
-          this.apartmentTitle = "行政";
-          break;
-        case "财务部":
-          this.apartmentTitle = "会计";
-          break;
-        case "销售部":
-          this.apartmentTitle = "电话销售";
-          break;
-        default:
-          this.apartmentTitle = label;
-      }
+      let deptName = data.deptName;
+      this.apartmentTitle = deptName;
+      this.form.deptId = data.id
       this.getTableData();
     },
     getClass(node) {
       return node.data.icon;
     },
     // 头像处理
-    imgCut(url){
-        url=url.replace(/#/g,"")
-        url=url.replace(/ /g,"")
-        return url
+    imgCut(url) {
+      url = url.replace(/#/g, "")
+      url = url.replace(/ /g, "")
+      return url
     },
     // 查看用户
     check(item) {
@@ -286,17 +154,21 @@ export default {
         this.tableData.unshift(data);
       }
     },
+    // 获取列表数据
     async getTableData() {
       this.loading = true;
-      let {page}=this
-      console.log({page})
-      await getUserTableData(JSON.stringify({page})).then(res => {
-        this.total=res.total
+      await getUserTableData(JSON.stringify(this.form)).then(res => {
+        this.total = res.total
         setTimeout(() => {
           this.loading = false;
-          this.tableData = res.data;
+          this.tableData = res.result.records;
         }, 2000);
       });
+    },
+    // 获取机构树
+    async getOrganzitionTree() {
+      let res = await getOrganzitionTree()
+      this.apartmentList = res.result
     },
     // 数据分页方法
     pageChange(val) {
@@ -306,9 +178,9 @@ export default {
   },
   mounted() {
     this.$nextTick(() => {
-      this.$refs.treeBox.setCurrentKey("1-1");
-      let { apartmentTitle } = this;
+      this.$refs.treeBox.setCurrentKey("1282333239024947200");
       this.getTableData();
+      this.getOrganzitionTree();
     });
   }
 };
