@@ -84,9 +84,10 @@ export default {
           let data = this.form;
           console.log(data);
           this.$store.dispatch("user/login", data).then(res => {
-            if (res.code === 200) {
+            if (!res.code) {
               this.$message.success("登录成功");
               this.$router.push({ path: "/index" });
+              console.log(12)
             } else {
               this.$message.error("登录失败");
             }
