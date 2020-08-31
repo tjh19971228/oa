@@ -64,75 +64,99 @@ div:focus {
   padding: 20px;
 }
 
-.d-flex{
+.d-flex {
   display: flex;
 }
 
-.pos-absolute{
+.pos-absolute {
   position: absolute;
 }
-.w-100per{
+
+.w-100per {
   width: 100%;
 }
-.w-80per{
+
+.w-80per {
   width: 80%;
 }
-.w-400{
+
+.w-400 {
   width: 400px;
 }
-.w-15per{
+
+.w-15per {
   width: 15%;
 }
-.w-10per{
+
+.w-10per {
   width: 10%;
 }
-.w-200{
+
+.w-110 {
+  width: 110px;
+}
+
+.w-200 {
   width: 200px;
 }
-.p-20{
+
+.w-400 {
+  width: 400px;
+}
+
+.p-20 {
   padding: 20px;
 }
-.align-center{
+
+.align-center {
   text-align: center;
 }
-.m-center{
-  margin: 0 auto;
-}
-.mt-20{
-  margin-top: 20px;
-}
-.mt-80{
-  margin-top: 80px;
-}
-.ml-10{
-  margin-left: 10px;
-}
-.ml-90per{
-  margin-left: 90%;
-}
-.mr-20{
-  margin-right: 20px;
-}
-.m-25{
-  margin:25px;
-}
-.m-auto{
+
+.m-center {
   margin: 0 auto;
 }
 
-.fr{
+.mt-20 {
+  margin-top: 20px;
+}
+
+.mt-80 {
+  margin-top: 80px;
+}
+
+.ml-10 {
+  margin-left: 10px;
+}
+
+.ml-90per {
+  margin-left: 90%;
+}
+
+.mr-20 {
+  margin-right: 20px;
+}
+
+.m-25 {
+  margin: 25px;
+}
+
+.m-auto {
+  margin: 0 auto;
+}
+
+.fr {
   float: right;
 }
 
-.lh-45{
+.lh-45 {
   line-height: 45px;
 }
 
-.talign-r{
+.talign-r {
   text-align: right;
 }
 
-.round{
+.round {
   border-radius: 50%;
-  
+
 }

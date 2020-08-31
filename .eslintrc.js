@@ -1,14 +1,17 @@
 module.exports = {
   root: true,
+
   parserOptions: {
-    parser: 'babel-eslint',
+    parser: '@typescript-eslint/parser',
     sourceType: 'module'
   },
+
   env: {
     browser: true,
     node: true,
     es6: true,
   },
+
   extends: ['plugin:vue/recommended', 'eslint:recommended', '@vue/standard', '@vue/typescript'],
 
   // add your custom rules here
@@ -194,5 +197,12 @@ module.exports = {
       objectsInObjects: false
     }],
     'array-bracket-spacing': [2, 'never']
-  }
+  },
+
+  'extends': [
+    'plugin:vue/recommended',
+    'eslint:recommended',
+    '@vue/standard',
+    '@vue/typescript'
+  ]
 }

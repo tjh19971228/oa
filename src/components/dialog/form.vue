@@ -2,7 +2,7 @@
   <div>
     <el-form
       :inline="true"
-      :label-position="'right'"
+      :label-position="'top'"
       class="w-80per m-auto lh-45"
       :rules="rules"
       ref="ruleForm"
@@ -24,7 +24,32 @@
           class="w-400"
         ></el-input>
       </el-form-item>
-      <el-form-item label="* 身份证：" prop="idcard">
+      <el-form-item label="* 部门：" prop="dept_id">
+        <el-select
+          class="w-400"
+          :value="deptName"
+          collapse-tags
+          @change="selectChange"
+        >
+          <el-option :value="deptName" style="height: auto">
+            <el-tree
+              :data="apartmentList"
+              default-expand-all
+              node-key="id"
+              @node-click="handleNodeClick"
+              placeholder="请选择"
+              :highlight-current="true"
+              :expand-on-click-node="false"
+              ref="treeBox"
+            >
+              <span class="custom-tree-node" slot-scope="{ node, data }">
+                <span>{{ data.deptName }}</span>
+              </span>
+            </el-tree>
+          </el-option>
+        </el-select>
+      </el-form-item>
+      <!-- <el-form-item label="* 身份证：" prop="idcard">
         <el-input
           placeholder="身份证"
           v-model="form.idcard"
@@ -48,14 +73,7 @@
           class="w-400"
         ></el-input>
       </el-form-item>
-      <el-form-item label="* 部门id：" prop="dept_id">
-        <el-input
-          placeholder="部门id"
-          v-model="form.dept_id"
-          :disabled="judge(isEdit)"
-          class="w-400"
-        ></el-input>
-      </el-form-item>
+
       <el-form-item label="* 性别：" prop="sex">
         <el-input
           placeholder="性别"
@@ -79,7 +97,7 @@
           :disabled="judge(isEdit)"
           class="w-400"
         ></el-input>
-      </el-form-item>
+      </el-form-item> -->
       <el-form-item label="* 手机号：" prop="phone">
         <el-input
           placeholder="手机号"
@@ -88,14 +106,14 @@
           class="w-400"
         ></el-input>
       </el-form-item>
-      <el-form-item label="* 地址：" prop="address">
+      <!-- <el-form-item label="* 地址：" prop="address">
         <el-input
           placeholder="地址"
           v-model="form.address"
           :disabled="judge(isEdit)"
           class="w-400"
         ></el-input>
-      </el-form-item>
+      </el-form-item> -->
     </el-form>
     <span slot="footer" class="dialog-footer">
       <el-button type="primary" @click="confirmTable" class="ml-90per"
@@ -106,6 +124,7 @@
 </template>
 
 <script>
+import { getOrganzitionTree } from "@/api/system";
 export default {
   props: ["tableData", "isEdit"],
   data() {
@@ -113,19 +132,21 @@ export default {
       form: {
         username: "",
         password: "",
-        idcard: "",
-        qq: "",
-        weixin: "",
-        dept_id: "",
-        sex: "",
-        avatar: "",
-        age: "",
-        phone: "",
-        address: ""
+        // idcard: "",
+        // qq: "",
+        // weixin: "",
+        // dept_id: "",
+        // sex: "",
+        // avatar: "",
+        // age: "",
+        phone: ""
+        // address: ""
       },
       rules: {
         username: [{ requried: true }]
-      }
+      },
+      apartmentList: [],
+      deptName: ""
     };
   },
   methods: {
@@ -134,16 +155,20 @@ export default {
     },
     confirmTable(data) {
       let flag = true;
-      for(let key in this.form){
-        if(!this.form[key]){
-          this.$message.error(`${key}不能为空`)
-          return
+      for (let key in this.form) {
+        if (!this.form[key]) {
+          this.$message.error(`${key}不能为空`);
+          return;
         }
       }
       if (flag) {
         this.$emit("confirmTable", this.form);
       }
-    }
+    },
+    handleNodeClick(data) {
+      this.deptName = data.deptName;
+    },
+    selectChange() {}
   },
   watch: {
     tableData(newVal, oldVal) {
@@ -154,6 +179,10 @@ export default {
     if (Object.keys(this.tableData).length) {
       this.form = this.tableData;
     }
+    getOrganzitionTree().then(res => {
+      this.apartmentList = res.result;
+      console.log(this.apartmentList);
+    });
   }
 };
 </script>

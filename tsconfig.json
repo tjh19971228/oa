@@ -6,16 +6,16 @@
     "jsx": "preserve",
     "importHelpers": true,
     "moduleResolution": "node",
-    "noImplicitAny": false,
     "experimentalDecorators": true,
+    "allowJs": true,
+    "skipLibCheck": true,
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
     "sourceMap": true,
     "baseUrl": ".",
     "types": [
-      "node",
-      "jest",
-      "webpack-env"
+      "webpack-env",
+      "jest"
     ],
     "paths": {
       "@/*": [
@@ -30,13 +30,11 @@
     ]
   },
   "include": [
-    "src/**/*.js",
     "src/**/*.ts",
     "src/**/*.tsx",
     "src/**/*.vue",
-    "tests/**/*.js",
     "tests/**/*.ts",
-    "tests/**/*.tsx",
+    "tests/**/*.tsx"
   ],
   "exclude": [
     "node_modules"

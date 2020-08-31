@@ -33,23 +33,32 @@
       <p class="apartmentTitle">{{ apartmentTitle }}</p>
       <div class="tableArea mt-80 w-100per">
         <div class="searchArea w-100per">
-          <el-select v-model="searchType" placeholder="请选择" class="w-10per">
-            <el-option
-              :key="item.key"
-              :label="item.label"
-              :value="item.label"
-              v-for="(item, index) in selectOptions"
-            >
-            </el-option>
-          </el-select>
           <el-input
             placeholder="请输入搜索内容"
             v-model="searchVal"
             clearable
-            class="w-15per"
+            class="w-400"
           >
+            <el-select
+              v-model="searchType"
+              placeholder="请选择"
+              class="w-110"
+              slot="prepend"
+            >
+              <el-option
+                :key="item.key"
+                :label="item.label"
+                :value="item.value"
+                v-for="item in selectOptions"
+              >
+              </el-option>
+            </el-select>
           </el-input>
-          <el-button type="primary" icon="el-icon-search" class="ml-10"
+          <el-button
+            type="primary"
+            icon="el-icon-search"
+            class="ml-10"
+            @click="search"
             >搜索</el-button
           >
           <el-button
@@ -63,7 +72,7 @@
         <div class="table">
           <el-table
             :data="tableData"
-            height="700"
+            height="600"
             max-height="100%"
             v-loading="loading"
             element-loading-text="拼命加载中"
@@ -114,7 +123,7 @@
             </el-table-column>
           </el-table>
           <el-pagination
-            layout="prev, pager, next,jumper"
+            layout="total,prev, pager, next,jumper"
             :total="total"
             background
             class="talign-r mt-20 mr-20"
@@ -158,8 +167,9 @@
 }
 
 .rightBox {
-  width: 80%;
+  width: 78%;
   height: 100%;
+  overflow-y: auto;
 
   .apartmentTitle {
     font-weight: bold;

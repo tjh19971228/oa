@@ -1,21 +1,18 @@
-import {
-  getUserTableData, getOrganzitionTree
-} from "@/api/system.ts";
-import { LABELLIST } from "./variable"
+import { getUserTableData, getOrganzitionTree } from "@/api/system.ts";
+import { LABELLIST, SELECTOPTIONS, SEARCHTYPE } from "./variable";
 import showTableData from "@/components/dialog/index";
 const INITPARAMS = () => ({
-  "cursor": 0,
-  "deptId": 1282333239024947200,
-  "email": "",
-  "idCard": "",
-  "limit": 0,
-  "mobile": "",
-  "qq": "",
-  "sex": "",
-  "username": "",
-  "wechat": ""
-
-})
+  cursor: 0,
+  deptId: 1282333239024947200,
+  email: "",
+  idCard: "",
+  limit: 0,
+  mobile: "",
+  qq: "",
+  sex: "",
+  username: "",
+  wechat: ""
+});
 
 export default {
   components: {
@@ -33,42 +30,14 @@ export default {
       apartmentTitle: "组织机构",
       currentKey: "组织机构",
       // 搜索的类型
-      searchType: "ID",
+      searchType: 0,
       // 搜索的表格ID/用户名
       searchVal: "",
       // 表格数据
       tableData: [],
       // 表格表头列表
       labelList: LABELLIST,
-      selectOptions: [{
-        label: "ID",
-        value: "id"
-      },
-      {
-        label: "用户名",
-        value: "username"
-      },
-      {
-        label: "身份证",
-        value: "idcards"
-      },
-      {
-        label: "qq",
-        value: "qq"
-      },
-      {
-        label: "微信",
-        value: "weixin"
-      },
-      {
-        label: "部门ID",
-        value: "apartmentId"
-      },
-      {
-        label: "手机号",
-        value: "phone"
-      }
-      ],
+      selectOptions: SELECTOPTIONS,
       // 数据加载中
       loading: false,
       // 是否显示表格弹窗
@@ -82,7 +51,7 @@ export default {
       // 当前表格处于第几页
       page: 1,
       //   总共的数据数
-      total: 0,
+      total: 0
       //
     };
   },
@@ -90,7 +59,7 @@ export default {
     handleNodeClick(data) {
       let deptName = data.deptName;
       this.apartmentTitle = deptName;
-      this.form.deptId = data.id
+      this.form.deptId = data.id;
       this.getTableData();
     },
     getClass(node) {
@@ -98,9 +67,12 @@ export default {
     },
     // 头像处理
     imgCut(url) {
-      url = url.replace(/#/g, "")
-      url = url.replace(/ /g, "")
-      return url
+      if (url) {
+        url = url.replace(/#/g, "");
+        url = url.replace(/ /g, "");
+        return url;
+      }
+
     },
     // 查看用户
     check(item) {
@@ -146,19 +118,18 @@ export default {
       this.isEdit = true;
     },
     // 关闭表格弹窗
-    closeShowTableData(data = undefined) {
+    closeShowTableData(refresh = false) {
       this.isShowTableData = false;
       this.isEdit = false;
-      // 如果有传递的数据，说明是新增操作
-      if (data) {
-        this.tableData.unshift(data);
+      if (refresh) {
+        this.getTableData();
       }
     },
     // 获取列表数据
     async getTableData() {
       this.loading = true;
       await getUserTableData(JSON.stringify(this.form)).then(res => {
-        this.total = res.total
+        this.total = res.result.total;
         setTimeout(() => {
           this.loading = false;
           this.tableData = res.result.records;
@@ -167,12 +138,19 @@ export default {
     },
     // 获取机构树
     async getOrganzitionTree() {
-      let res = await getOrganzitionTree()
-      this.apartmentList = res.result
+      let res = await getOrganzitionTree();
+      this.apartmentList = res.result;
     },
     // 数据分页方法
     pageChange(val) {
       this.page = val;
+      this.getTableData();
+    },
+    // 搜索用户
+    search() {
+      // 重置页数
+      this.form.cursor = 1;
+      this.form[SEARCHTYPE[this.searchType]] = this.searchVal;
       this.getTableData();
     }
   },
