@@ -1,6 +1,6 @@
 import { getUserTableData, getOrganzitionTree } from "@/api/system.ts";
 import { LABELLIST, SELECTOPTIONS, SEARCHTYPE } from "./variable";
-import showTableData from "@/components/dialog/index";
+import showTableData from "./components/dialog/index";
 const INITPARAMS = () => ({
   cursor: 0,
   deptId: 1282333239024947200,

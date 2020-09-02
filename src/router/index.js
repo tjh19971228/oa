@@ -153,7 +153,7 @@ export const constantRoutes = [
       }
     ]
   },
-  
+
   {
     path: "/EHR",
     component: Layout,
@@ -236,7 +236,7 @@ export const constantRoutes = [
       },
       {
         path: "roleManagement",
-        component: () => import("@/views/nested/menu2/index"),
+        component: () => import("@/views/system/roleManagement/index.vue"),
         meta: { title: "角色管理", icon: "iconfont iconjiaoseguanli" }
       },
       {

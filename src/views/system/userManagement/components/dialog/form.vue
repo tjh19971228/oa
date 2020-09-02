@@ -4,7 +4,6 @@
       :inline="true"
       :label-position="'top'"
       class="w-80per m-auto lh-45"
-      :rules="rules"
       ref="ruleForm"
       v-model="form"
     >
@@ -123,68 +122,105 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import { getOrganzitionTree } from "@/api/system";
-export default {
-  props: ["tableData", "isEdit"],
-  data() {
-    return {
-      form: {
-        username: "",
-        password: "",
-        // idcard: "",
-        // qq: "",
-        // weixin: "",
-        // dept_id: "",
-        // sex: "",
-        // avatar: "",
-        // age: "",
-        phone: ""
-        // address: ""
-      },
-      rules: {
-        username: [{ requried: true }]
-      },
-      apartmentList: [],
-      deptName: ""
-    };
-  },
-  methods: {
-    judge(flag) {
-      return !flag;
-    },
-    confirmTable(data) {
-      let flag = true;
-      for (let key in this.form) {
-        if (!this.form[key]) {
-          this.$message.error(`${key}不能为空`);
-          return;
+import { Component, Vue, Watch, Prop } from "vue-property-decorator";
+
+class FORM {
+  username: string;
+  password: string;
+  deptId: string;
+  phone: string;
+  [key: string]: string;
+  constructor() {
+    this.username = "";
+    this.password = "";
+    this.deptId = "";
+    this.phone = "";
+  }
+}
+const TIPS: Array<String> = ["用户名", "密码", "部门", "手机号"];
+interface RULES {
+  username: Array<Object>;
+}
+@Component
+export default class Form extends Vue {
+  @Prop(Object) readonly "tableData": FORM;
+  @Prop({ default: false }) readonly "isEdit": Boolean | false;
+  private form: FORM = {
+    username: "",
+    password: "",
+    deptId: "",
+    phone: ""
+  };
+  private apartmentList: Array<Object> = [];
+  private deptName: String = "";
+
+  public judge(flag: boolean) {
+    return !flag;
+  }
+  public confirmTable() {
+    let flag = true;
+    try {
+      Object.keys(this.form).forEach((item, index) => {
+        if (!this.form[item]) {
+          this.$message.error(`${item}不能为空`);
+          throw new Error();
         }
-      }
-      if (flag) {
-        this.$emit("confirmTable", this.form);
-      }
-    },
-    handleNodeClick(data) {
-      this.deptName = data.deptName;
-    },
-    selectChange() {}
-  },
-  watch: {
-    tableData(newVal, oldVal) {
-      this.form = newVal;
+      });
+    } catch (e) {
+      return;
     }
-  },
+    if (flag) {
+      this.$emit("confirmTable", this.form);
+    }
+  }
+  public handleNodeClick(data: any) {
+    console.log(data);
+    this.deptName = data.deptName;
+    this.form.deptId = data.id;
+  }
+  public selectChange(val: any) {
+    // console.log(val);
+  }
+  @Watch("tableData")
+  OnTableDataChanged(newVal: FORM, oldVal: FORM) {
+    this.form = newVal;
+  }
   mounted() {
     if (Object.keys(this.tableData).length) {
       this.form = this.tableData;
     }
-    getOrganzitionTree().then(res => {
+    getOrganzitionTree().then((res: any) => {
       this.apartmentList = res.result;
-      console.log(this.apartmentList);
+      // console.log(this.apartmentList);
     });
   }
-};
+}
+// export default {
+//   props: ["tableData", "isEdit"],
+//   data() {
+//     return {
+//       form: {
+//         username: "",
+//         password: "",
+//         // idcard: "",
+//         // qq: "",
+//         // weixin: "",
+//         // dept_id: "",
+//         // sex: "",
+//         // avatar: "",
+//         // age: "",
+//         phone: ""
+//         // address: ""
+//       },
+//       rules: {
+//         username: [{ requried: true }]
+//       },
+//       apartmentList: [],
+//       deptName: ""
+//     };
+//   },
 </script>
 
 <style lang="scss" scoped>
