@@ -16,7 +16,7 @@
     <div>
       <slot></slot>
     </div>
-    <div slot="footer" v-if="$slots.footer">
+    <div slot="footer" v-if="$slots.footer" style="width:100%;text-align:right;"> 
       <slot name="footer"></slot>
     </div>
     <div slot="footer" v-else>

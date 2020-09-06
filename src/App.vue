@@ -5,7 +5,15 @@
 </template>
 
 <script lang="ts">
+import user from './store/modules/user';
 export default {
-  name: "App"
+  name: "App",
+  created(){
+    if(sessionStorage.getItem("userInfo")){
+      let userInfo=sessionStorage.getItem("userInfo")
+      this.$store.dispatch("user/setUserInfo",userInfo)
+    }
+  }
 };
+
 </script>

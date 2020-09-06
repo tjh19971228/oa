@@ -87,8 +87,11 @@ const SEARCHTYPE = [
   "username",
   "wechat"
 ];
+
+const CHECKLABEL:Array<String>=['qq','微信','邮箱','手机','头像','性别','出生日期','年龄','身份证','部门ID','部门','角色ID','角色名']
 module.exports = {
   LABELLIST,
   SELECTOPTIONS,
-  SEARCHTYPE
+  SEARCHTYPE,
+  CHECKLABEL
 };

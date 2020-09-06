@@ -37,11 +37,12 @@ const actions = {
         })
       )
         .then(res => {
-          const { data } = res;
-          if (res.code === 200) {
-            commit('SET_TOKEN', data.token)
-            commit("SET_USERINFO", res.data)
-            setToken(data.token)
+          const { result } = res;
+          if (!res.code ) {
+            commit('SET_TOKEN', result.token)
+            commit("SET_USERINFO", result)
+            setToken(result.token)
+            sessionStorage.setItem("userInfo",result)
             resolve(res);
           }
           else {
@@ -107,6 +108,12 @@ const actions = {
       commit("RESET_STATE");
       resolve();
     });
+  },
+  
+  // setUserInfo
+  setUserInfo({commit},data){
+    commit('SET_TOKEN', data.token)
+    commit("SET_USERINFO", data)
   }
 };
 

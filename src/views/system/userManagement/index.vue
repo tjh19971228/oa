@@ -1,6 +1,6 @@
 <template>
   <div class="container d-flex pos-absolute">
-    <div class="leftBox  p-20 align-center">
+    <div class="leftBox p-20 align-center">
       <el-select
         v-model="searchApartmentValue"
         filterable
@@ -8,10 +8,9 @@
         reserve-keyword
         clearable
         placeholder="输入要搜索的部门"
-        class="m-center mt-20  w-80per"
+        class="m-center mt-20 w-80per"
         prefix-icon="el-icon-search"
-      >
-      </el-select>
+      ></el-select>
       <el-tree
         :data="apartmentList"
         default-expand-all
@@ -24,7 +23,7 @@
         class="m-25"
         ref="treeBox"
       >
-        <span class="custom-tree-node" slot-scope="{ node, data }">
+        <span class="custom-tree-node" slot-scope="{ data }">
           <span>{{ data.deptName }}</span>
         </span>
       </el-tree>
@@ -50,8 +49,7 @@
                 :label="item.label"
                 :value="item.value"
                 v-for="item in selectOptions"
-              >
-              </el-option>
+              ></el-option>
             </el-select>
           </el-input>
           <el-button
@@ -128,8 +126,7 @@
             background
             class="talign-r mt-20 mr-20"
             @current-change="pageChange"
-          >
-          </el-pagination>
+          ></el-pagination>
         </div>
       </div>
     </div>
@@ -172,8 +169,7 @@
             placeholder="选择出生日期"
             format="yyyy 年 MM 月 dd 日"
             value-format="yyyy-MM-dd"
-          >
-          </el-date-picker>
+          ></el-date-picker>
         </el-form-item>
         <el-form-item label="身份证" required>
           <el-input v-model="editForm.idCard"></el-input>
@@ -198,6 +194,27 @@
         <el-button type="primary" icon="el-icon-check" @click="confirmEdit"
           >确定</el-button
         >
+      </div>
+    </oa-dialog>
+
+    <!-- 查看用户 -->
+    <oa-dialog
+      :title="'查看用户详情'"
+      :width="'520'"
+      :visible="isCheck"
+      @closed="isCheck = false"
+    >
+      <el-form label-position="top">
+        <el-form-item
+          v-for="(value, key,index) in checkForm"
+          :key="index"
+          :label="checkLabel[index]"
+        >
+          <el-input v-model="checkForm[key]" disabled></el-input>
+        </el-form-item>
+      </el-form>
+      <div slot="footer">
+        <el-button type="danger" @click="closeCheck" icon="el-icon-close">关闭</el-button>
       </div>
     </oa-dialog>
   </div>

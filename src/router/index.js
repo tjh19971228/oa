@@ -197,7 +197,7 @@ export const constantRoutes = [
     children: [
       {
         path: "infoManagement",
-        component: () => import("@/views/nested/menu2/index"),
+        component: () => import("@/views/personal/infoManagement/index.vue"),
         meta: { title: "信息管理", icon: "iconfont iconxinxiguanli" }
       },
       {

@@ -43,3 +43,11 @@ export function editUser(data:object){
     data
   })
 }
+
+//获取角色详情
+export function getUserDetail(id:string){
+  return request({
+    url:`/api/user/detail?userId=${id}`,
+    method:"get",
+  })
+}

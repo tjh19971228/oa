@@ -1,5 +1,10 @@
-import { getUserTableData, getOrganzitionTree ,editUser} from "@/api/system.ts";
-import { LABELLIST, SELECTOPTIONS, SEARCHTYPE } from "./variable";
+import {
+  getUserTableData,
+  getOrganzitionTree,
+  editUser,
+  getUserDetail
+} from "@/api/system.ts";
+import { LABELLIST, SELECTOPTIONS, SEARCHTYPE,CHECKLABEL } from "./variable";
 import showTableData from "./components/dialog/index";
 const INITPARAMS = () => ({
   cursor: 0,
@@ -23,6 +28,21 @@ const EDITFORM = () => ({
   sex: "",
   userId: "",
   wechat: ""
+});
+const CHECKFORM = () => ({
+  qq: "",
+  wechat: "",
+  email: "",
+  mobile: "",
+  avatar: "",
+  sex: "",
+  birthday: "",
+  age: "",
+  idCard: "",
+  deptId: "",
+  deptName: "",
+  roleId: "",
+  roleName: ""
 });
 export default {
   components: {
@@ -59,14 +79,18 @@ export default {
       // 是否可以编辑表格数据
       isEdit: false,
       // 当前编辑的ID
-      editID:0,
+      editID: 0,
       // 编辑的表单数据
-      editForm:EDITFORM(),
+      editForm: EDITFORM(),
       // 当前表格处于第几页
       page: 1,
       //   总共的数据数
-      total: 0
-      //
+      total: 0,
+      //是否显示查看用户弹窗
+      isCheck:false,
+      // 用户表格
+      checkForm:CHECKFORM(),
+      checkLabel:CHECKLABEL
     };
   },
   methods: {
@@ -89,21 +113,21 @@ export default {
     },
     // 查看用户
     check(item) {
-      console.log("item", item);
-      this.isShowTableData = true;
-      this.tableDataTitle = "查看用户";
-      this.form = item;
-      console.log("this.form", this.form);
+      this.editID=item.id;
+      this.isCheck=true;
+      getUserDetail(this.editID).then(res=>{
+        this.checkForm=res.result
+      })
     },
     // 编辑用户
     editUser(item) {
       this.isEdit = true;
-      this.editID=item.id;
-      Object.keys(item).forEach(key=>{
-        if(this.editForm.hasOwnProperty(key)){
-          this.editForm[key]=item[key]
+      this.editID = item.id;
+      Object.keys(item).forEach(key => {
+        if (this.editForm.hasOwnProperty(key)) {
+          this.editForm[key] = item[key];
         }
-      })
+      });
     },
     handleAvatarSuccess(res, file) {
       this.editForm.avatar = URL.createObjectURL(file.raw);
@@ -134,7 +158,6 @@ export default {
       this.isShowTableData = true;
       this.form = {};
       this.tableDataTitle = "新建用户";
-      this.isEdit = true;
     },
     // 关闭表格弹窗
     closeShowTableData(refresh = false) {
@@ -145,20 +168,25 @@ export default {
       }
     },
     // 关闭编辑
-    closeEdit(){
-      this.isEdit=false;
-      this.editForm=EDITFORM();
+    closeEdit() {
+      this.isEdit = false;
+      this.editForm = EDITFORM();
     },
     // 确认编辑
-    confirmEdit(){
-      this.editForm.userId=this.editID;
-      editUser(this.editForm).then(res=>{
-        if(!res.errcode){
-          this.$message.success("修改成功")
-          this.isEdit=false
-          this.editForm=EDITFORM();
+    confirmEdit() {
+      this.editForm.userId = this.editID;
+      editUser(this.editForm).then(res => {
+        if (!res.errcode) {
+          this.$message.success("修改成功");
+          this.isEdit = false;
+          this.editForm = EDITFORM();
         }
-      })
+      });
+    },
+    // 关闭查看
+    closeCheck(){
+      this.isCheck=false
+      this.checkForm=CHECKFORM();
     },
     // 获取列表数据
     async getTableData() {
