@@ -1,4 +1,4 @@
-import { getUserTableData, getOrganzitionTree } from "@/api/system.ts";
+import { getUserTableData, getOrganzitionTree ,editUser} from "@/api/system.ts";
 import { LABELLIST, SELECTOPTIONS, SEARCHTYPE } from "./variable";
 import showTableData from "./components/dialog/index";
 const INITPARAMS = () => ({
@@ -13,7 +13,17 @@ const INITPARAMS = () => ({
   username: "",
   wechat: ""
 });
-
+const EDITFORM = () => ({
+  avatar: "",
+  birthday: "",
+  email: "",
+  idCard: "",
+  mobile: "",
+  qq: "",
+  sex: "",
+  userId: "",
+  wechat: ""
+});
 export default {
   components: {
     showTableData
@@ -48,6 +58,10 @@ export default {
       form: INITPARAMS(),
       // 是否可以编辑表格数据
       isEdit: false,
+      // 当前编辑的ID
+      editID:0,
+      // 编辑的表单数据
+      editForm:EDITFORM(),
       // 当前表格处于第几页
       page: 1,
       //   总共的数据数
@@ -72,7 +86,6 @@ export default {
         url = url.replace(/ /g, "");
         return url;
       }
-
     },
     // 查看用户
     check(item) {
@@ -83,11 +96,17 @@ export default {
       console.log("this.form", this.form);
     },
     // 编辑用户
-    edit(item, index) {
-      this.isShowTableData = true;
-      this.tableDataTitle = "编辑用户";
-      this.form = item;
+    editUser(item) {
       this.isEdit = true;
+      this.editID=item.id;
+      Object.keys(item).forEach(key=>{
+        if(this.editForm.hasOwnProperty(key)){
+          this.editForm[key]=item[key]
+        }
+      })
+    },
+    handleAvatarSuccess(res, file) {
+      this.editForm.avatar = URL.createObjectURL(file.raw);
     },
     // 删除用户
     deleteUser(item, index) {
@@ -125,9 +144,26 @@ export default {
         this.getTableData();
       }
     },
+    // 关闭编辑
+    closeEdit(){
+      this.isEdit=false;
+      this.editForm=EDITFORM();
+    },
+    // 确认编辑
+    confirmEdit(){
+      this.editForm.userId=this.editID;
+      editUser(this.editForm).then(res=>{
+        if(!res.errcode){
+          this.$message.success("修改成功")
+          this.isEdit=false
+          this.editForm=EDITFORM();
+        }
+      })
+    },
     // 获取列表数据
     async getTableData() {
       this.loading = true;
+      this.form = INITPARAMS();
       await getUserTableData(JSON.stringify(this.form)).then(res => {
         this.total = res.result.total;
         setTimeout(() => {

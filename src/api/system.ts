@@ -25,3 +25,21 @@ export function registerUser(data: object): any {
     data
   });
 }
+
+// 获取角色列表
+export function getRoleList(data:object):any{
+    return request({
+      url:"/api/role/list",
+      method:"post",
+      data
+    })
+}
+
+// 编辑角色
+export function editUser(data:object){
+  return request({
+    url:"/api/user/update",
+    method:"post",
+    data
+  })
+}

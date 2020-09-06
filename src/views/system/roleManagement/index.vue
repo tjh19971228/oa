@@ -14,7 +14,7 @@
               @click="searchRole()"
             ></el-button>
           </el-input>
-          <el-button type="success" class="fr">新建角色</el-button>
+          <el-button type="success" class="fr" @click="showDialog">新建角色</el-button>
         </el-row>
       </el-header>
       <el-row class="w-100per ">
@@ -39,7 +39,7 @@
         </el-col>
       </el-row>
     </el-container>
-    <oa-dialog :title="新建角色" :visible="visible">
+    <oa-dialog :title="'新建角色'" :visible.sync="visible" @closed="closeEdit">
       <div>
         <el-form :form="form"> </el-form>
       </div>
@@ -72,6 +72,15 @@ export default class roleManagement extends Vue {
     this.$nextTick(() => {
       (this.$refs.oaTable as any).$getTableData();
     });
+  }
+  public showDialog(){
+    this.visible=true
+  }
+  /**
+   *  onClosed
+   */
+  public closeEdit() {
+    this.visible=false;
   }
   mounted() {
     (this.$refs.oaTable as any).$getTableData();

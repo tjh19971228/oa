@@ -109,7 +109,7 @@
                   type="primary"
                   icon="el-icon-edit"
                   size="small"
-                  @click="edit(scope.row, scope.$index)"
+                  @click="editUser(scope.row)"
                   >编辑</el-button
                 >
                 <el-button
@@ -134,14 +134,72 @@
       </div>
     </div>
 
-    <!-- 表格弹窗 -->
+    <!-- 添加表格弹窗 -->
     <show-table-data
       :isShowTableData="isShowTableData"
       :title="tableDataTitle"
       @closeShowTableData="closeShowTableData"
       :tableData="form"
-      :isEdit="isEdit"
     ></show-table-data>
+
+    <!-- 编辑表格弹窗 -->
+    <oa-dialog
+      :title="'编辑用户资料'"
+      :width="'520'"
+      :visible="isEdit"
+      @closed="isEdit = false"
+    >
+      <el-form :label-position="'top'" :label-width="'110'">
+        <el-form-item label="头像">
+          <el-upload
+            class="avatar-uploader"
+            action="http://47.100.25.217:9001/api/file/add"
+            :show-file-list="false"
+            :on-success="handleAvatarSuccess"
+          >
+            <img v-if="editForm.avatar" :src="editForm.avatar" class="avatar" />
+            <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+          </el-upload>
+        </el-form-item>
+        <el-form-item label="性别">
+          <el-radio v-model="editForm.sex" label="男">男</el-radio>
+          <el-radio v-model="editForm.sex" label="女">女</el-radio>
+        </el-form-item>
+        <el-form-item label="出生日期" required>
+          <el-date-picker
+            v-model="editForm.birthday"
+            type="date"
+            placeholder="选择出生日期"
+            format="yyyy 年 MM 月 dd 日"
+            value-format="yyyy-MM-dd"
+          >
+          </el-date-picker>
+        </el-form-item>
+        <el-form-item label="身份证" required>
+          <el-input v-model="editForm.idCard"></el-input>
+        </el-form-item>
+        <el-form-item label="手机号" required>
+          <el-input v-model="editForm.mobile"></el-input>
+        </el-form-item>
+        <el-form-item label="QQ">
+          <el-input v-model="editForm.qq"></el-input>
+        </el-form-item>
+        <el-form-item label="微信" required>
+          <el-input v-model="editForm.wechat"></el-input>
+        </el-form-item>
+        <el-form-item label="邮箱">
+          <el-input v-model="editForm.email"></el-input>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" style="width:100%;text-align:right;">
+        <el-button type="info" icon="el-icon-close" @click="closeEdit"
+          >取消</el-button
+        >
+        <el-button type="primary" icon="el-icon-check" @click="confirmEdit"
+          >确定</el-button
+        >
+      </div>
+    </oa-dialog>
   </div>
 </template>
 
@@ -151,6 +209,31 @@
 .container {
   width: 100%;
   height: 100%;
+
+  .avatar-uploader .el-upload {
+    border: 1px dashed #d9d9d9;
+    border-radius: 6px;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+  }
+  .avatar-uploader .el-upload:hover {
+    border-color: #409eff;
+  }
+  .avatar-uploader-icon {
+    font-size: 28px;
+    color: #8c939d;
+    width: 178px;
+    height: 178px;
+    line-height: 178px;
+    text-align: center;
+    border: 1px dashed #d9d9d9;
+  }
+  .avatar {
+    width: 178px;
+    height: 178px;
+    display: block;
+  }
 }
 .leftBox {
   width: 20%;
