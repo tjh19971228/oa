@@ -39,10 +39,14 @@ const actions = {
     commit('TOGGLE_DEVICE', device)
   }
 }
+const getters = {
+
+}
 
 export default {
   namespaced: true,
   state,
+  getters,
   mutations,
   actions
 }

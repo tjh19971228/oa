@@ -31,6 +31,11 @@ Vue.use(ElementUI);
 import { oaTable, oaDialog } from "@/utils/installComponent";
 
 Vue.use(oaTable).use(oaDialog);
+import directive from "@/utils/directive";
+Vue.use(directive);
+
+import auth from "@/utils/installFunction";
+Vue.use(auth);
 Vue.config.productionTip = false;
 
 new Vue({

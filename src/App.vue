@@ -5,15 +5,14 @@
 </template>
 
 <script lang="ts">
-import user from './store/modules/user';
+import user from "./store/modules/user";
 export default {
   name: "App",
-  created(){
-    if(sessionStorage.getItem("userInfo")){
-      let userInfo=sessionStorage.getItem("userInfo")
-      this.$store.dispatch("user/setUserInfo",userInfo)
+  created() {
+    if (sessionStorage.getItem("userInfo")) {
+      let userInfo = JSON.parse(sessionStorage.getItem("userInfo") as any);
+      (this as any).$store.dispatch("user/setUserInfo", userInfo);
     }
   }
 };
-
 </script>

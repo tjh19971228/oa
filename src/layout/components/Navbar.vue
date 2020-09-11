@@ -1,60 +1,133 @@
 <template>
   <div class="navbar">
-    <hamburger :is-active="sidebar.opened" class="hamburger-container" @toggleClick="toggleSideBar" />
+    <hamburger
+      :is-active="sidebar.opened"
+      class="hamburger-container"
+      @toggleClick="toggleSideBar"
+    />
 
     <breadcrumb class="breadcrumb-container" />
-
     <div class="right-menu">
       <el-dropdown class="avatar-container" trigger="click">
         <div class="avatar-wrapper">
-          <img :src="avatar+'?imageView2/1/w/80/h/80'" class="user-avatar">
+          <img
+            src="https://i.pinimg.com/564x/30/31/d0/3031d0df7a9fe9f18ccfccba64ed16fa.jpg"
+            class="user-avatar"
+          />
           <i class="el-icon-caret-bottom" />
         </div>
         <el-dropdown-menu slot="dropdown" class="user-dropdown">
-          <router-link to="/">
-            <el-dropdown-item>
-              Home
-            </el-dropdown-item>
-          </router-link>
-          <a target="_blank" href="https://github.com/PanJiaChen/vue-admin-template/">
-            <el-dropdown-item>Github</el-dropdown-item>
-          </a>
-          <a target="_blank" href="https://panjiachen.github.io/vue-element-admin-site/#/">
-            <el-dropdown-item>Docs</el-dropdown-item>
-          </a>
-          <el-dropdown-item divided @click.native="logout">
-            <span style="display:block;">Log Out</span>
+          <el-dropdown-item>
+            <span @click="changePassword">修改密码</span>
+          </el-dropdown-item>
+          <el-dropdown-item>
+            <span @click="out">退出</span>
           </el-dropdown-item>
         </el-dropdown-menu>
       </el-dropdown>
     </div>
+    <oa-dialog
+      :title="'修改密码'"
+      :width="'520'"
+      :visible.sync="showChangePassword"
+      @closed="showChangePassword = false"
+    >
+      <el-form label-position="top" :rules="rules">
+        <el-form-item
+          v-for="(item, index) in labelList"
+          :key="index"
+          required
+          :label="item.label"
+          :prop="item.value"
+        >
+          <el-input v-model="editForm[item.value]"></el-input>
+        </el-form-item>
+      </el-form>
+      <div slot="footer">
+        <el-button
+          type="danger"
+          @click="closeChangePassword"
+          icon="el-icon-close"
+          >关闭</el-button
+        >
+        <el-button type="primary" @click="confirmEdit" icon="el-icon-check">
+          确定
+        </el-button>
+      </div>
+    </oa-dialog>
   </div>
 </template>
 
-<script>
-import { mapGetters } from 'vuex'
-import Breadcrumb from '@/components/Breadcrumb'
-import Hamburger from '@/components/Hamburger'
-
-export default {
+<script lang="ts">
+import { mapGetters } from "vuex";
+import Breadcrumb from "../../components//Breadcrumb/index.vue";
+import Hamburger from "../../components/Hamburger/index.vue";
+import { Component, Vue, Watch, Prop } from "vue-property-decorator";
+class LABEL {
+  label: string;
+  value: string;
+  constructor() {
+    this.label = "";
+    this.value = "";
+  }
+}
+class EDITFORM {
+  oldPassword: string;
+  newPassword: string;
+  confirmPassword: string;
+  constructor() {
+    this.oldPassword = "";
+    this.newPassword = "";
+    this.confirmPassword = "";
+  }
+}
+const LABELLIST: Array<LABEL> = [
+  { label: "旧密码", value: "oldPassword" },
+  { label: "新密码", value: "newPassword" },
+  { label: "确认新密码", value: "confirmPassword" }
+];
+@Component({
   components: {
     Breadcrumb,
     Hamburger
   },
-  computed: {
-    ...mapGetters([
-      'sidebar',
-      'avatar'
-    ])
-  },
-  methods: {
-    toggleSideBar() {
-      this.$store.dispatch('app/toggleSideBar')
-    },
-    async logout() {
-      await this.$store.dispatch('user/logout')
-      this.$router.push(`/login?redirect=${this.$route.fullPath}`)
+  computed: mapGetters(["sidebar"])
+})
+export default class Navbar extends Vue {
+  // data
+  private showChangePassword: boolean = false;
+  private editForm: EDITFORM = new EDITFORM();
+  private labelList = LABELLIST;
+  private rules = {
+    oldPassword: [{ required: true, message: "请输入旧密码", trigger: "blur" }],
+    newPassword: [{ required: true, message: "请输入新密码", trigger: "blur" }],
+    confirmPassword: [{ validator: this.checkConfirmPassword, trigger: "blur" }]
+  };
+  public toggleSideBar() {
+    this.$store.dispatch("app/toggleSideBar");
+  }
+  public out() {
+    this.$store.dispatch("user/logout");
+    this.$router.push({ path: "/login" });
+  }
+
+  public changePassword() {
+    this.showChangePassword = true;
+  }
+
+  public closeChangePassword() {
+    this.showChangePassword = false;
+  }
+  public confirmEdit() {}
+  public checkConfirmPassword(rule: any, value: any, callback: any) {
+    if (!value) {
+      return callback(new Error("确认密码不能为空"));
     }
+    setTimeout(() => {
+      if (this.editForm.newPassword !== value) {
+        return callback(new Error("确认密码和输入的新密码不一致"));
+      }
+    }, 1000);
   }
 }
 </script>
@@ -65,18 +138,18 @@ export default {
   overflow: hidden;
   position: relative;
   background: #fff;
-  box-shadow: 0 1px 4px rgba(0,21,41,.08);
+  box-shadow: 0 1px 4px rgba(0, 21, 41, 0.08);
 
   .hamburger-container {
     line-height: 46px;
     height: 100%;
     float: left;
     cursor: pointer;
-    transition: background .3s;
-    -webkit-tap-highlight-color:transparent;
+    transition: background 0.3s;
+    -webkit-tap-highlight-color: transparent;
 
     &:hover {
-      background: rgba(0, 0, 0, .025)
+      background: rgba(0, 0, 0, 0.025);
     }
   }
 
@@ -103,10 +176,10 @@ export default {
 
       &.hover-effect {
         cursor: pointer;
-        transition: background .3s;
+        transition: background 0.3s;
 
         &:hover {
-          background: rgba(0, 0, 0, .025)
+          background: rgba(0, 0, 0, 0.025);
         }
       }
     }

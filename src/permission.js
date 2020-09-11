@@ -5,6 +5,7 @@ import NProgress from "nprogress"; // progress bar
 import "nprogress/nprogress.css"; // progress bar style
 import { getToken } from "@/utils/auth"; // get token from cookie
 import getPageTitle from "@/utils/get-page-title";
+import Vue from "vue"
 
 NProgress.configure({ showSpinner: false }); // NProgress Configuration
 
@@ -24,22 +25,27 @@ router.beforeEach(async (to, from, next) => {
       next({ path: "/" });
       NProgress.done();
     } else {
-      console.log(store.getters);
       const hasGetUserInfo = store.getters.userInfo;
       console.log("userInfo", hasGetUserInfo);
-      if (hasGetUserInfo) {
+      console.log(to)
+      let flag = false
+      if (Vue.prototype.$auth(to.fullPath, 'path')) {
+        flag = true
+      }
+      if (hasGetUserInfo && flag) {
         next();
       } else {
         // remove token and go to login page to re-login
         store.dispatch("user/resetToken");
-        Message.error(error || "Has Error");
+        Message.error("没有权限");
         next(`/login?redirect=${to.path}`);
         NProgress.done();
       }
+      // next()
     }
   } else {
     /* has no token*/
-    
+
     if (whiteList.indexOf(to.path) !== -1) {
       // in the free login whitelist, go directly
       next();

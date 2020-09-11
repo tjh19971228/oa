@@ -9,17 +9,21 @@
     :top="top"
     @closed="onClosed"
   >
-    <div slot="title">
+    <div slot="title" class="title">
       <slot name="title" v-if="$slots.title"></slot>
       <template v-else>{{ title }}</template>
     </div>
     <div>
       <slot></slot>
     </div>
-    <div slot="footer" v-if="$slots.footer" style="width:100%;text-align:right;"> 
+    <div
+      slot="footer"
+      v-if="$slots.footer"
+      style="width:100%;text-align:right;"
+    >
       <slot name="footer"></slot>
     </div>
-    <div slot="footer" v-else>
+    <div slot="footer" v-else style="width:100%;text-align:right;">
       <el-button type="danger" @click="onClickCancel" icon="el-icon-close">{{
         cancelText
       }}</el-button>
@@ -49,7 +53,7 @@ export default class oaDialog extends Vue {
 
   @Watch("visible")
   onChangeVisible(newVal: boolean, oldVal: boolean) {
-    console.log(newVal);
+    console.log("new", newVal);
     this.showDialog = newVal;
   }
 
@@ -60,11 +64,16 @@ export default class oaDialog extends Vue {
   public onClickConfirm() {}
   @Emit("closed")
   public onClosed() {
-    this.showDialog=false
+    this.showDialog = false;
   }
-
-
 }
 </script>
 
-<style></style>
+<style lang="scss" scoped>
+.title {
+  width: 100%;
+  text-align: left;
+  font-size: 28px;
+  font-weight: bold;
+}
+</style>

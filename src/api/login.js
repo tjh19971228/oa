@@ -9,3 +9,10 @@ export function login(data) {
     data: data
   })
 }
+export function getCaptcha() {
+  return request({
+    url: "/captcha.jpg",
+    responseType: 'arraybuffer',
+    method: "get"
+  })
+}

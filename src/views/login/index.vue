@@ -53,7 +53,8 @@
 </template>
 
 <script>
-import { login } from "@/api/login";
+import { login, getCaptcha } from "@/api/login";
+import Cookies from "js-cookie";
 export default {
   name: "Login",
   data() {
@@ -72,7 +73,12 @@ export default {
       }
     };
   },
-  mounted() {},
+  mounted() {
+    // getCaptcha().then(res => {
+    //   console.log(res);
+    //   console.log(Cookies.get("JSSESSIONID"));
+    // });
+  },
   methods: {
     changeCaptcha() {
       // 刷新验证码
@@ -87,7 +93,7 @@ export default {
             if (!res.code) {
               this.$message.success("登录成功");
               this.$router.push({ path: "/index" });
-              console.log(12)
+              console.log(12);
             } else {
               this.$message.error("登录失败");
             }

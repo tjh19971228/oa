@@ -5,7 +5,8 @@ import { resetRouter } from "@/router";
 const getDefaultState = () => {
   return {
     token: getToken(),
-    userInfo: {}
+    userInfo: {},
+    menus: [{ path: "/system", name: "system", children: [{ path: "/system/userManagement", name: "userManagement" }] }, { path: "/index" }]
   };
 };
 
@@ -38,11 +39,11 @@ const actions = {
       )
         .then(res => {
           const { result } = res;
-          if (!res.code ) {
+          if (!res.code) {
             commit('SET_TOKEN', result.token)
             commit("SET_USERINFO", result)
             setToken(result.token)
-            sessionStorage.setItem("userInfo",result)
+            sessionStorage.setItem("userInfo", JSON.stringify(result))
             resolve(res);
           }
           else {
@@ -88,16 +89,13 @@ const actions = {
   // user logout
   logout({ commit, state }) {
     return new Promise((resolve, reject) => {
-      logout(state.token)
-        .then(() => {
-          removeToken(); // must remove  token  first
-          resetRouter();
-          commit("RESET_STATE");
-          resolve();
-        })
-        .catch(error => {
-          reject(error);
-        });
+
+      removeToken(); // must remove  token  first
+      resetRouter();
+      commit("RESET_STATE");
+      resolve();
+
+
     });
   },
 
@@ -109,9 +107,9 @@ const actions = {
       resolve();
     });
   },
-  
+
   // setUserInfo
-  setUserInfo({commit},data){
+  setUserInfo({ commit }, data) {
     commit('SET_TOKEN', data.token)
     commit("SET_USERINFO", data)
   }

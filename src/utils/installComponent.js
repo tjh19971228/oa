@@ -1,5 +1,5 @@
-import myTable from "../components/table/index"
-import myDialog from "@/components/dialog/index"
+import myTable from "../components/Table/index"
+import myDialog from "../components/Dialog/index"
 import Vue from "vue"
 export const oaTable = {
   install: function (val) {

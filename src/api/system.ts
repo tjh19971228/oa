@@ -25,29 +25,61 @@ export function registerUser(data: object): any {
     data
   });
 }
+// 编辑用户
+export function editUser(data: object) {
+  return request({
+    url: "/api/user/update",
+    method: "post",
+    data
+  });
+}
+
+//获取用户详情
+export function getUserDetail(id: string) {
+  return request({
+    url: `/api/user/detail?userId=${id}`,
+    method: "get"
+  });
+}
 
 // 获取角色列表
-export function getRoleList(data:object):any{
-    return request({
-      url:"/api/role/list",
-      method:"post",
-      data
-    })
-}
-
-// 编辑角色
-export function editUser(data:object){
+export function getRoleList(data: object): any {
   return request({
-    url:"/api/user/update",
-    method:"post",
+    url: "/api/role/list",
+    method: "post",
     data
-  })
+  });
 }
 
-//获取角色详情
-export function getUserDetail(id:string){
+// 新建角色
+export function addRole(data: object) {
   return request({
-    url:`/api/user/detail?userId=${id}`,
-    method:"get",
-  })
+    url: "/api/role/add",
+    method: "post",
+    data
+  });
+}
+
+// 获取角色详情
+export function getRoleDetail(roleId: string) {
+  return request({
+    url: `/api/role/detail?id=${roleId}`,
+    method: "get"
+  });
+}
+// 编辑角色
+export function editRole(data: object) {
+  return request({
+    url: "/api/role/update",
+    method: "post",
+    data
+  });
+}
+
+// 删除角色
+export function removeRole(roleId: string) {
+  return request({
+    url: `/api/role/remove?id=${roleId}`,
+    method: "get"
+  });
 }
