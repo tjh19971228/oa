@@ -8,18 +8,19 @@
       :before-close="handleClose"
     >
       <form-table
-        :tableData="table"
-        :isEdit="isEdit"
+        :table-data="table"
+        :is-edit="isEdit"
         @confirmTable="confirmTable"
-      ></form-table>
+      />
     </el-dialog>
   </div>
 </template>
 
 <script lang="ts">
-import { Component, Vue, Prop, Watch, Emit } from "vue-property-decorator";
+import { Component, Vue, Prop, Watch } from "vue-property-decorator";
 import formTable from "./form.vue";
 import { registerUser } from "@/api/system";
+
 @Component({
   components: {
     formTable
@@ -41,9 +42,10 @@ export default class Index extends Vue {
   public handleClose() {
     this.$emit("closeShowTableData");
   }
+
   public async confirmTable(data: Object) {
     console.log(data);
-    let res = await registerUser(data);
+    const res = await registerUser(data);
     if (!res.errcode) {
       this.$message.success("添加成功");
     }
