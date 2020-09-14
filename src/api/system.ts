@@ -83,3 +83,11 @@ export function removeRole(roleId: string) {
     method: "get"
   });
 }
+
+// 获取菜单树
+export function getMenuList(){
+  return request({
+    url:'/api/menu/get-tree',
+    method:"get"
+  })
+}

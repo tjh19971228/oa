@@ -6,7 +6,7 @@ const getDefaultState = () => {
   return {
     token: getToken(),
     userInfo: {},
-    menus: [{ path: "/system", name: "system", children: [{ path: "/system/userManagement", name: "userManagement" }] }, { path: "/index" }]
+    menus: []
   };
 };
 
@@ -21,6 +21,10 @@ const mutations = {
   },
   SET_USERINFO: (state, userInfo) => {
     state.userInfo = userInfo
+  },
+  SET_MENUS:(state,menus)=>{
+    state.menus=menus
+    console.log("state",menus)
   }
 };
 
@@ -41,9 +45,12 @@ const actions = {
           const { result } = res;
           if (!res.code) {
             commit('SET_TOKEN', result.token)
+            commit('SET_MENUS',result.roleMenu)
             commit("SET_USERINFO", result)
+            console.log(state.menus)
             setToken(result.token)
             sessionStorage.setItem("userInfo", JSON.stringify(result))
+            sessionStorage.setItem("menus",JSON.stringify(result.roleMenu))
             resolve(res);
           }
           else {
@@ -112,6 +119,10 @@ const actions = {
   setUserInfo({ commit }, data) {
     commit('SET_TOKEN', data.token)
     commit("SET_USERINFO", data)
+  },
+  // setMenus
+  setMenus({commit},data){
+    commit("SET_MENUS",data)
   }
 };
 

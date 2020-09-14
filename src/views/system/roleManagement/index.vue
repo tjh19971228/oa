@@ -67,6 +67,20 @@
           >
             <el-input v-model.lazy="editForm[item.value]"></el-input>
           </el-form-item>
+          <p>
+            <span style="color:#ff0113;">* </span
+            ><span style="font-weight:bold;">菜单权限</span>
+          </p>
+          <el-tree
+            :data="menuList"
+            show-checkbox
+            node-key="id"
+            @check-change="handleCheckChange"
+          >
+            <span slot-scope="{ data }">
+              <span>{{ MENUS[data.menuName] }}</span>
+            </span>
+          </el-tree>
         </el-form>
       </div>
       <div slot="footer">
@@ -83,15 +97,19 @@ import {
   addRole,
   getRoleDetail,
   editRole,
-  removeRole
+  removeRole,
+  getMenuList
 } from "../../../api/system";
+import { MENUS } from "./variable";
 class FORM {
   roleName: string;
   remark: string;
-  [key: string]: string;
+  menuIds: Array<string>;
+  [key: string]: String | Array<string>;
   constructor() {
     this.roleName = "";
     this.remark = "";
+    this.menuIds = [];
   }
 }
 class LABEL {
@@ -126,6 +144,12 @@ export default class roleManagement extends Vue {
   private editForm: FORM = new FORM();
   private labelList = LABELLIST;
   private isEdit: boolean = false;
+  private MENUS = MENUS;
+  private defaultProps: object = {
+    children: "children",
+    label: "label"
+  };
+  private menuList: Array<Object> = [];
   private rules: RULES = {
     roleName: [
       {
@@ -163,7 +187,7 @@ export default class roleManagement extends Vue {
     try {
       Object.keys(this.editForm).forEach((item, index) => {
         if (!this.editForm[item]) {
-          let message = ["角色名", "备注"][index];
+          let message = ["角色名", "备注","部门"][index];
           this.$message.error(`${message}不能为空`);
           throw new Error();
         }
@@ -176,6 +200,7 @@ export default class roleManagement extends Vue {
         if (!res.errcode) {
           this.$message.success("新建成功");
           this.visible = false;
+          this.form=new FORM();
           this.$nextTick(() => {
             (this.$refs.oaTable as any).$getTableData();
           });
@@ -185,6 +210,7 @@ export default class roleManagement extends Vue {
       editRole(this.editForm).then((res: any) => {
         if (!res.errcode) {
           this.$message.success("编辑成功");
+          this.editForm=new FORM();
           this.visible = false;
           this.$nextTick(() => {
             (this.$refs.oaTable as any).$getTableData();
@@ -212,8 +238,27 @@ export default class roleManagement extends Vue {
       }
     });
   }
+  public handleCheckChange(data: any, checked: any, indeterminate: any) {
+    let getId = (data: any) => {
+      if(!this.editForm.menuIds.includes(data.id)){
+        this.editForm.menuIds.push(data.id);
+      }
+      if (data.children && data.children.length) {
+        data.children.forEach((item: any) => {
+          getId(item);
+        });
+      }
+    };
+    if (data && !indeterminate) {
+      getId(data);
+    }
+
+  }
   mounted() {
     (this.$refs.oaTable as any).$getTableData();
+    getMenuList().then((res: any) => {
+      this.menuList = res.result;
+    });
   }
 }
 </script>
