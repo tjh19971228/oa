@@ -14,8 +14,16 @@
     "test:ci": "npm run lint && npm run test:unit"
   },
   "dependencies": {
+    "@vue/eslint-config-standard": "^5.1.2",
     "axios": "0.18.1",
     "element-ui": "2.13.2",
+    "eslint": "^5.16.0",
+    "eslint-loader": "^3.0.2",
+    "eslint-plugin-import": "^2.22.0",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-promise": "^4.2.1",
+    "eslint-plugin-standard": "^4.0.1",
+    "eslint-plugin-vue": "^5.2.3",
     "js-cookie": "2.2.0",
     "normalize.css": "7.0.0",
     "nprogress": "0.2.0",
@@ -29,6 +37,8 @@
   },
   "devDependencies": {
     "@types/jest": "^23.1.4",
+    "@typescript-eslint/eslint-plugin": "^4.1.0",
+    "@typescript-eslint/parser": "^4.1.0",
     "@vue/cli-plugin-babel": "3.6.0",
     "@vue/cli-plugin-eslint": "^3.9.1",
     "@vue/cli-plugin-typescript": "^4.5.4",
