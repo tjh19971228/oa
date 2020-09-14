@@ -4,7 +4,7 @@ import {
   editUser,
   getUserDetail
 } from "@/api/system.ts";
-import { LABELLIST, SELECTOPTIONS, SEARCHTYPE,CHECKLABEL } from "./variable";
+import { LABELLIST, SELECTOPTIONS, SEARCHTYPE, CHECKLABEL } from "./variable";
 import showTableData from "./components/dialog/index";
 const INITPARAMS = () => ({
   cursor: 0,
@@ -86,19 +86,22 @@ export default {
       page: 1,
       //   总共的数据数
       total: 0,
-      //是否显示查看用户弹窗
-      isCheck:false,
+      // 是否显示查看用户弹窗
+      isCheck: false,
       // 用户表格
-      checkForm:CHECKFORM(),
-      checkLabel:CHECKLABEL
+      checkForm: CHECKFORM(),
+      checkLabel: CHECKLABEL
     };
   },
   methods: {
     handleNodeClick(data) {
-      let deptName = data.deptName;
+      const deptName = data.deptName;
       this.apartmentTitle = deptName;
+      console.log("data", data);
       this.form.deptId = data.id;
-      this.getTableData();
+      this.$nextTick(() => {
+        this.getTableData();
+      });
     },
     getClass(node) {
       return node.data.icon;
@@ -113,11 +116,11 @@ export default {
     },
     // 查看用户
     check(item) {
-      this.editID=item.id;
-      this.isCheck=true;
-      getUserDetail(this.editID).then(res=>{
-        this.checkForm=res.result
-      })
+      this.editID = item.id;
+      this.isCheck = true;
+      getUserDetail(this.editID).then(res => {
+        this.checkForm = res.result;
+      });
     },
     // 编辑用户
     editUser(item) {
@@ -153,7 +156,7 @@ export default {
           });
         });
     },
-    //新建用户
+    // 新建用户
     newUser() {
       this.isShowTableData = true;
       this.form = {};
@@ -184,14 +187,13 @@ export default {
       });
     },
     // 关闭查看
-    closeCheck(){
-      this.isCheck=false
-      this.checkForm=CHECKFORM();
+    closeCheck() {
+      this.isCheck = false;
+      this.checkForm = CHECKFORM();
     },
     // 获取列表数据
     async getTableData() {
       this.loading = true;
-      this.form = INITPARAMS();
       await getUserTableData(JSON.stringify(this.form)).then(res => {
         this.total = res.result.total;
         setTimeout(() => {
@@ -202,7 +204,7 @@ export default {
     },
     // 获取机构树
     async getOrganzitionTree() {
-      let res = await getOrganzitionTree();
+      const res = await getOrganzitionTree();
       this.apartmentList = res.result;
     },
     // 数据分页方法
